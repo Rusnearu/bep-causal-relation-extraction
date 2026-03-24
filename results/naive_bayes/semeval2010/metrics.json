@@ -1,0 +1,49 @@
+{
+  "model": "naive_bayes",
+  "dataset": "semeval2010",
+  "primary": {
+    "macro_f1_causal_only": 0.6295
+  },
+  "per_class": {
+    "Cause-Effect(e1,e2)": {
+      "precision": 0.9808,
+      "recall": 0.3806,
+      "f1": 0.5484,
+      "support": 134
+    },
+    "Cause-Effect(e2,e1)": {
+      "precision": 0.8,
+      "recall": 0.6392,
+      "f1": 0.7106,
+      "support": 194
+    },
+    "Other": {
+      "precision": 0.9466,
+      "recall": 0.9946,
+      "f1": 0.97,
+      "support": 2389
+    }
+  },
+  "overall": {
+    "macro_f1_all3": 0.743,
+    "micro_f1": 0.9389,
+    "accuracy": 0.9389
+  },
+  "confusion_matrix": [
+    [
+      51,
+      18,
+      65
+    ],
+    [
+      1,
+      124,
+      69
+    ],
+    [
+      0,
+      13,
+      2376
+    ]
+  ]
+}
