@@ -1,11 +1,12 @@
 """
 features.py
 ===========
-Feature extraction matching the paper's NB baseline description:
-"local context of 2 words only — words in the sentential context only"
+Feature extraction: position-labeled 2-word context window around each entity.
 
-We extract only the 2 words immediately before and after each entity,
-plus the entity word(s) themselves. Everything else is discarded.
+For each entity, the words to the left are labeled e1_l:word, the entity
+word(s) are labeled e1:word, and the words to the right are labeled e1_r:word.
+Same for e2. All left-context words share the same position label regardless
+of distance, so position is coarsely encoded in the bag-of-words.
 """
 
 import re
@@ -14,12 +15,11 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 def extract_local_context(raw_sentence, window=2):
     """
-    Extract a 2-word window around each entity from a tagged sentence.
+    Extract position-labeled context window features around each entity.
 
-    Collect the *positions* covered by both windows into an
-    ordered set, so overlapping words between close entities are never
-    duplicated.
-
+    Returns a string of space-separated tokens like:
+        'e1_l:arrayed e1_l:antenna e1:configuration e1_r:of e1_r:antenna
+         e2_l:antenna e2_l:elements e2:elements e2_r:.'
     """
     token_pattern = re.compile(r'(<e1>|</e1>|<e2>|</e2>|[^\s<>]+)')
     raw_tokens = token_pattern.findall(raw_sentence)
@@ -47,34 +47,22 @@ def extract_local_context(raw_sentence, window=2):
             elif inside_e2:
                 e2_positions.append(idx)
 
-    if not e1_positions or not e2_positions:
-        return ' '.join(words)  # fallback if parsing failed
-
     e1_start, e1_end = e1_positions[0], e1_positions[-1]
     e2_start, e2_end = e2_positions[0], e2_positions[-1]
 
-    # Collect all word positions covered by either window into a sorted set.
-    # A set automatically removes duplicates. We then sort to preserve order.
-    e1_window_positions = set(range(
-        max(0, e1_start - window),
-        min(len(words), e1_end + window + 1)
-    ))
-    e2_window_positions = set(range(
-        max(0, e2_start - window),
-        min(len(words), e2_end + window + 1)
-    ))
+    features = []
+    features += [f'e1_l:{words[i]}' for i in range(max(0, e1_start - window), e1_start)]
+    features += [f'e1:{words[i]}' for i in e1_positions]
+    features += [f'e1_r:{words[i]}' for i in range(e1_end + 1, min(len(words), e1_end + window + 1))]
+    features += [f'e2_l:{words[i]}' for i in range(max(0, e2_start - window), e2_start)]
+    features += [f'e2:{words[i]}' for i in e2_positions]
+    features += [f'e2_r:{words[i]}' for i in range(e2_end + 1, min(len(words), e2_end + window + 1))]
 
-    # Union of both windows, sorted so we read words left-to-right
-    all_positions = sorted(e1_window_positions | e2_window_positions)
-
-    # Read out the words at those positions
-    context_words = [words[i] for i in all_positions]
-
-    return ' '.join(context_words)
+    return ' '.join(features)
 
 
-def create_vectorizer():
+def create_vectorizer(ngram_range=(1, 1)):
     return CountVectorizer(
-        ngram_range=(1, 2),
-        token_pattern=r'\b[a-zA-Z][a-zA-Z0-9]*\b'
+        ngram_range=ngram_range,
+        token_pattern=r'[a-zA-Z0-9_]+:[a-zA-Z0-9]+' 
     )

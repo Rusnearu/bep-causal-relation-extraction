@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+*.pyo
+data/semeval2010/r-bert/cached_*
+experiments/

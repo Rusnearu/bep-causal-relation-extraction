@@ -9,7 +9,7 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
 
-def build_naive_bayes_pipeline(vectorizer, alpha=0.8):
+def build_naive_bayes_pipeline(vectorizer, alpha=1.0):
     """
     Chains CountVectorizer → MultinomialNB into one sklearn Pipeline.
 

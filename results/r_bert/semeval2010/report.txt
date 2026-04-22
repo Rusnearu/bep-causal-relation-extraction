@@ -1,0 +1,25 @@
+EVALUATION REPORT
+Model:   r_bert
+Dataset: semeval2010
+============================================================
+
+PRIMARY METRIC
+  Macro F1 (Cause-Effect only): 0.9198
+
+PER-CLASS RESULTS
+Label                            P       R      F1   Support
+--------------------------------------------------------
+Cause-Effect(e1,e2)         0.9328  0.9328  0.9328       134
+Cause-Effect(e2,e1)         0.8867  0.9278  0.9068       194
+Other                       0.9920  0.9883  0.9901      2389
+
+OVERALL
+  Macro F1 (all 3): 0.9433
+  Micro F1:         0.9812
+  Accuracy:         0.9812
+
+CONFUSION MATRIX (rows=true, cols=pred)
+Labels: ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
+[[ 125    3    6]
+ [   1  180   13]
+ [   8   20 2361]]
