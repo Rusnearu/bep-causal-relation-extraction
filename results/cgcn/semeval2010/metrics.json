@@ -1,0 +1,49 @@
+{
+  "model": "cgcn",
+  "dataset": "semeval2010",
+  "primary": {
+    "macro_f1_causal_only": 0.8955
+  },
+  "per_class": {
+    "Cause-Effect(e1,e2)": {
+      "precision": 0.952,
+      "recall": 0.8881,
+      "f1": 0.9189,
+      "support": 134
+    },
+    "Cause-Effect(e2,e1)": {
+      "precision": 0.8836,
+      "recall": 0.8608,
+      "f1": 0.8721,
+      "support": 194
+    },
+    "Other": {
+      "precision": 0.9829,
+      "recall": 0.9887,
+      "f1": 0.9858,
+      "support": 2389
+    }
+  },
+  "overall": {
+    "macro_f1_all3": 0.9256,
+    "micro_f1": 0.9746,
+    "accuracy": 0.9746
+  },
+  "confusion_matrix": [
+    [
+      119,
+      0,
+      15
+    ],
+    [
+      1,
+      167,
+      26
+    ],
+    [
+      5,
+      22,
+      2362
+    ]
+  ]
+}

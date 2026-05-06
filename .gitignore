@@ -1,5 +1,7 @@
 __pycache__/
 *.pyc
 *.pyo
-data/semeval2010/r-bert/cached_*
-experiments/
+venv/
+data/glove/
+saved_models/
+data/semeval2010/cgcn/vocab/

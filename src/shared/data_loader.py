@@ -1,6 +1,4 @@
 """
-data_loader.py  (src/shared/)
-==============================
 Shared data loading for the 3-class causal relation extraction project.
 
 Supports:
@@ -10,15 +8,6 @@ Supports:
   - label_mode='full'    → keeps the original 19-class labels (for the
                            reproduction baseline in notebooks/reproduction/)
 
-The 3-class mapping is the heart of this project:
-  - Cause-Effect(e1,e2) and Cause-Effect(e2,e1) are kept as-is.
-  - Every other relation (including the original 'Other') becomes 'Other'.
-
-This module is intentionally model-agnostic: it returns raw example dicts
-with the sentence text (and <e1>/<e2> tags intact) so that each model can
-apply its own preprocessing / feature extraction on top.
-
-Dataset 2 (to be added later): add a new load_<dataset>_* function here.
 """
 
 import re

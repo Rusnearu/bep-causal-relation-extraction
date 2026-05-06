@@ -1,81 +1,14 @@
 """
-evaluation.py  (src/shared/)
-==============================
 Shared evaluation framework for 3-class causal relation extraction.
 
-TASK DEFINITION
----------------
-Given a sentence with two marked entities <e1> and <e2>, classify whether:
-    Cause-Effect(e1,e2)  —  e1 is the cause, e2 is the effect
-    Cause-Effect(e2,e1)  —  e2 is the cause, e1 is the effect
-    Other                —  no causal relation (catch-all)
-
-EVALUATION DESIGN
------------------
 PRIMARY METRIC: Macro F1 over the 2 Cause-Effect classes ONLY (excluding Other)
-
-    Rationale:
-    1. Follows the SemEval-2010 Task 8 tradition [Hendrickx et al., 2010] of
-       excluding the "Other" class from the official score. "Other" is a
-       heterogeneous catch-all that inflates performance when included.
-
-    2. For causal extraction, correctly distinguishing (e1,e2) from (e2,e1)
-       is non-trivial and semantically critical — getting the direction wrong
-       means inverting cause and effect. The macro F1 over both directions
-       captures this: a model must be good at BOTH orientations, not just at
-       detecting causality in the abstract.
-
-    3. Macro averaging (equal weight per class) prevents the slightly more
-       frequent Cause-Effect(e2,e1) class from dominating the score.
-
-    4. This metric is directly comparable across our three models (NB,
-       R-BERT, SDP-LSTM) and across both datasets.
 
 SECONDARY METRICS (also reported and saved):
     - Per-class Precision, Recall, F1 for all 3 classes
     - Macro F1 over all 3 classes (including Other)
     - Micro F1 (= accuracy for balanced-class assumptions)
     - Accuracy
-    - Confusion matrix — particularly useful for diagnosing direction errors
-
-USAGE
------
-    from src.shared.evaluation import evaluate
-
-    # Single evaluation
-    metrics = evaluate(
-        y_true        = [...],          # list of ground-truth labels
-        y_pred        = [...],          # list of predicted labels
-        model_name    = 'naive_bayes',
-        dataset_name  = 'semeval2010',
-        output_dir    = '../results/naive_bayes/semeval2010/',  # saves files
-    )
-
-REFERENCES
-----------
-[1] Hendrickx et al. (2010). "SemEval-2010 Task 8: Multi-Way Classification
-    of Semantic Relations between Pairs of Nominals." SemEval 2010.
-    https://aclanthology.org/S10-1006/
-    → Establishes macro F1 excluding Other as the standard metric for
-      relation classification. Our primary metric directly mirrors this.
-
-[2] Wu & He (2019). "Enriching Pre-trained Language Model with Entity
-    Information for Relation Classification." CIKM 2019.
-    https://arxiv.org/abs/1905.08284
-    → R-BERT paper. Uses per-class and macro F1 on SemEval-2010 Task 8.
-    → Our framework produces exactly the metrics they report, enabling
-      direct comparison.
-
-[3] Xu et al. (2015). "Classifying Relations via Long Short Term Memory
-    Networks along Shortest Dependency Path." EMNLP 2015.
-    https://arxiv.org/abs/1508.03720
-    → SDP-LSTM paper. Also evaluated with macro F1 on SemEval-2010 Task 8.
-    → Same metric setup, ensuring our comparisons are fair.
-
-[4] Socher et al. (2012). "Semantic Compositionality through Recursive
-    Matrix-Vector Spaces." EMNLP 2012.
-    https://aclanthology.org/D12-1110/ 
-    → Classic relation classification work also using macro F1 excluding Other.
+    - Confusion matrix
 """
 
 import os
@@ -113,25 +46,6 @@ def evaluate(
     dataset_name: str,
     output_dir: str = None,
 ):
-    """
-    Evaluate a 3-class causal relation classifier.
-
-    Parameters
-    ----------
-    y_true       : list of str  — ground truth labels
-    y_pred       : list of str  — model predictions
-    model_name   : str  — e.g. 'naive_bayes', 'r_bert', 'sdp_lstm'
-    dataset_name : str  — e.g. 'semeval2010'
-    output_dir   : str or None — if given, saves report/metrics/plot there
-
-    Returns
-    -------
-    dict with keys:
-        'primary'   : {'macro_f1_causal_only': float}   ← THE metric
-        'per_class' : {label: {'precision', 'recall', 'f1-score', 'support'}}
-        'overall'   : {'macro_f1_all3', 'micro_f1', 'accuracy'}
-        'confusion_matrix': np.ndarray  (rows=true, cols=pred)
-    """
     y_true = list(y_true)
     y_pred = list(y_pred)
 
