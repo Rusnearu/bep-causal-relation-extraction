@@ -202,7 +202,7 @@ class Trainer(object):
             y_true=true_labels,
             y_pred=pred_labels,
             model_name="r_bert",
-            dataset_name="semeval2010",
+            dataset_name=os.path.basename(self.args.eval_dir),
             output_dir=self.args.eval_dir,
         )
 

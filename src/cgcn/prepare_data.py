@@ -1,12 +1,13 @@
 """
-Converts SemEval-2010 Task 8 to the JSON format expected by C-GCN model.
+Converts SemEval-2010 Task 8 or CausalNewsCorpus to the JSON format expected by C-GCN.
 
-This needs to be run only once locally.
+This needs to be run only once locally per dataset.
 
 Usage (from repo root):
     pip install stanza
     python -c "import stanza; stanza.download('en')"
-    python src/cgcn/prepare_data.py
+    python src/cgcn/prepare_data.py --dataset semeval
+    python src/cgcn/prepare_data.py --dataset cnc
 """
 
 import json
@@ -16,12 +17,23 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
-import stanza
-from src.shared.data_loader import load_semeval_train, load_semeval_test_with_labels
+import argparse
 
-TRAIN_PATH = 'data/semeval2010/raw/TRAIN_FILE.TXT'
-TEST_PATH  = 'data/semeval2010/raw/TEST_FILE_FULL.TXT'
-OUT_DIR    = 'data/semeval2010/cgcn'
+import stanza
+from src.shared.data_loader import load_semeval_train, load_semeval_test_with_labels, load_cnc_data
+
+DATASETS = {
+    'semeval': {
+        'train': 'data/semeval2010/raw/TRAIN_FILE.TXT',
+        'test':  'data/semeval2010/raw/TEST_FILE_FULL.TXT',
+        'out':   'data/semeval2010/cgcn',
+    },
+    'cnc': {
+        'train': 'data/CausalNewsCorpus/train_clean.txt',
+        'test':  'data/CausalNewsCorpus/dev_clean.txt',
+        'out':   'data/CausalNewsCorpus/cgcn',
+    },
+}
 
 # NER tag mapping: stanza tags → TACRED-compatible tags used by the GCN repo
 
@@ -139,11 +151,22 @@ def convert(examples, nlp):
 # Main
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dataset', default='semeval', choices=['semeval', 'cnc'],
+                        help='Which dataset to prepare (semeval or cnc)')
+    args = parser.parse_args()
+
+    cfg = DATASETS[args.dataset]
+    OUT_DIR = cfg['out']
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    print('Loading SemEval data (3-class mapping)...')
-    train = load_semeval_train(TRAIN_PATH, label_mode='3class')
-    test  = load_semeval_test_with_labels(TEST_PATH, label_mode='3class')
+    print(f'Loading {args.dataset} data (3-class mapping)...')
+    if args.dataset == 'semeval':
+        train = load_semeval_train(cfg['train'], label_mode='3class')
+        test  = load_semeval_test_with_labels(cfg['test'], label_mode='3class')
+    else:
+        train = load_cnc_data(cfg['train'])
+        test  = load_cnc_data(cfg['test'])
     print(f'  Train: {len(train)}  |  Test: {len(test)}')
 
     print('\nLoading stanza pipeline...')
@@ -163,7 +186,7 @@ def main():
     print(f'  Done: {len(test_records)} records')
 
     for split, records in [('train', train_records), ('test', test_records)]:
-        out_path = os.path.join(OUT_DIR, f'{split}.json')
+        out_path = os.path.join(OUT_DIR, f'{split}.json')  # OUT_DIR set above from dataset config
         with open(out_path, 'w', encoding='utf-8') as f:
             json.dump(records, f)
         print(f'Saved {out_path}  ({len(records)} records)')

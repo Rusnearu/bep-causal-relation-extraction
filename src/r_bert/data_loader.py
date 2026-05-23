@@ -76,7 +76,7 @@ class InputFeatures(object):
 
 
 class SemEvalProcessor(object):
-    """Processor for the Semeval data set """
+    """Processor for relation extraction datasets in TSV format (label<TAB>sentence)."""
 
     def __init__(self, args):
         self.args = args
@@ -93,7 +93,7 @@ class SemEvalProcessor(object):
             return lines
 
     def _create_examples(self, lines, set_type):
-        """Creates examples for the training and dev sets."""
+        """Creates examples for a given dataset split."""
         examples = []
         for (i, line) in enumerate(lines):
             guid = "%s-%s" % (set_type, i)

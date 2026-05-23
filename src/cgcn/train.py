@@ -1,5 +1,8 @@
 """
-Train C-GCN on SemEval-2010 Task 8 (3-class causal relation extraction).
+Train C-GCN for 3-class causal relation extraction.
+
+Supports any dataset whose JSON files were prepared by prepare_data.py.
+Dataset is inferred from --eval_dir (e.g. results/cgcn/semeval2010 → semeval2010).
 """
 
 import os
@@ -211,7 +214,7 @@ shared_evaluate(
     y_true=gold_labels,
     y_pred=best_predictions,
     model_name='cgcn',
-    dataset_name='semeval2010',
+    dataset_name=os.path.basename(opt['eval_dir']),
     output_dir=opt['eval_dir'],
 )
 print("Evaluation complete. Results saved to {}".format(opt['eval_dir']))

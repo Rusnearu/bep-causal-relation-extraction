@@ -1,0 +1,25 @@
+EVALUATION REPORT
+Model:   naive_bayes
+Dataset: cnc
+============================================================
+
+PRIMARY METRIC
+  Macro F1 (Cause-Effect only): 0.6948
+
+PER-CLASS RESULTS
+Label                            P       R      F1   Support
+--------------------------------------------------------
+Cause-Effect(e1,e2)         0.6842  0.3939  0.5000        33
+Cause-Effect(e2,e1)         0.8142  0.9803  0.8896       152
+Other                       0.9412  0.4706  0.6275        34
+
+OVERALL
+  Macro F1 (all 3): 0.6723
+  Micro F1:         0.8128
+  Accuracy:         0.8128
+
+CONFUSION MATRIX (rows=true, cols=pred)
+Labels: ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
+[[ 13  20   0]
+ [  2 149   1]
+ [  4  14  16]]

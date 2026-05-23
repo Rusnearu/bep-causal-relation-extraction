@@ -172,7 +172,7 @@ def _save_results(metrics, cm, output_dir):
         f.write(f"Labels: {LABEL_ORDER}\n")
         f.write(str(cm) + "\n")
 
-    # 2. Metrics in JSON format (usefull when comparing different models)
+    # 2. Metrics in JSON format (useful when comparing different models)
     json_metrics = {k: v for k, v in metrics.items() if k != 'confusion_matrix'}
     json_metrics['confusion_matrix'] = cm.tolist()
     json_path = os.path.join(output_dir, 'metrics.json')

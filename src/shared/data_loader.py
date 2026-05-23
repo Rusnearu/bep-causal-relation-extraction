@@ -1,12 +1,14 @@
 """
 Shared data loading for the 3-class causal relation extraction project.
 
-Supports:
-  - SemEval-2010 Task 8 format (train / test files)
-  - label_mode='3class'  → maps all 19 SemEval labels to 3 classes:
-        Cause-Effect(e1,e2), Cause-Effect(e2,e1), Other
-  - label_mode='full'    → keeps the original 19-class labels (for the
-                           reproduction baseline in notebooks/reproduction/)
+Supports two datasets:
+  - SemEval-2010 Task 8 (TRAIN_FILE.TXT / TEST_FILE_FULL.TXT)
+      label_mode='3class'  → maps all 19 SemEval labels to 3 classes:
+                             Cause-Effect(e1,e2), Cause-Effect(e2,e1), Other
+      label_mode='full'    → keeps the original 19-class labels (used only
+                             in the reproduction baseline)
+  - CausalNewsCorpus V1 (*_clean.txt)
+      Labels are already 3-class; no mapping needed.
 
 """
 
@@ -118,6 +120,39 @@ def load_semeval_test_with_labels(filepath: str, label_mode: str = '3class'):
     if label_mode == '3class':
         for ex in examples:
             ex['label'] = _map_to_3class(ex['label'])
+    return examples
+
+
+def load_cnc_data(filepath: str):
+    """
+    Loads CausalNewsCorpus *_clean.txt files.
+    Format per line: row_idx<TAB>sent_id<TAB>"sentence"<TAB>Label.
+    Labels are already 3-class; the trailing period is stripped.
+    Returns list of dicts: {id, sentence, e1, e2, label}
+    """
+    examples = []
+    with open(filepath, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split('\t')
+            if len(parts) < 3:
+                continue
+            sent_id  = int(parts[0])
+            sentence = parts[1].strip('"')
+            label    = parts[2].strip().rstrip('.')
+
+            e1_match = re.search(r'<e1>(.*?)</e1>', sentence)
+            e2_match = re.search(r'<e2>(.*?)</e2>', sentence)
+
+            examples.append({
+                'id':       sent_id,
+                'sentence': sentence,
+                'e1':       e1_match.group(1) if e1_match else '',
+                'e2':       e2_match.group(1) if e2_match else '',
+                'label':    label,
+            })
     return examples
 
 
