@@ -1,12 +1,12 @@
 """
 Shared evaluation framework for 3-class causal relation extraction.
 
-PRIMARY METRIC: Macro F1 over the 2 Cause-Effect classes ONLY (excluding Other)
+PRIMARY METRIC: Macro F1 over the 2 Cause-Effect classes (excluding Other)
 
-SECONDARY METRICS (also reported and saved):
+SECONDARY METRICS:
     - Per-class Precision, Recall, F1 for all 3 classes
     - Macro F1 over all 3 classes (including Other)
-    - Micro F1 (= accuracy for balanced-class assumptions)
+    - Micro F1 
     - Accuracy
     - Confusion matrix
 """
@@ -20,14 +20,10 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 
-# ---------------------------------------------------------------------------
-# Constants
-# ---------------------------------------------------------------------------
-
 LABEL_ORDER = ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
 CAUSAL_LABELS = ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)']
 
-# Short names for display / plot axes
+# Short names for display in plots
 SHORT_NAMES = {
     'Cause-Effect(e1,e2)': 'CE(e1,e2)',
     'Cause-Effect(e2,e1)': 'CE(e2,e1)',
@@ -35,10 +31,7 @@ SHORT_NAMES = {
 }
 
 
-# ---------------------------------------------------------------------------
 # Main evaluation
-# ---------------------------------------------------------------------------
-
 def evaluate(
     y_true,
     y_pred,
@@ -49,7 +42,7 @@ def evaluate(
     y_true = list(y_true)
     y_pred = list(y_pred)
 
-    # --- Core metrics ---
+    # Core metrics
     report_dict = classification_report(
         y_true, y_pred,
         labels=LABEL_ORDER,
@@ -112,10 +105,7 @@ def evaluate(
     return metrics
 
 
-# ---------------------------------------------------------------------------
 # Internal helpers
-# ---------------------------------------------------------------------------
-
 def _print_report(metrics):
     m = metrics
     print(f"\n{'='*60}")
@@ -172,17 +162,17 @@ def _save_results(metrics, cm, output_dir):
         f.write(f"Labels: {LABEL_ORDER}\n")
         f.write(str(cm) + "\n")
 
-    # 2. Metrics in JSON format (useful when comparing different models)
+    # 2. Metrics in JSON format 
     json_metrics = {k: v for k, v in metrics.items() if k != 'confusion_matrix'}
     json_metrics['confusion_matrix'] = cm.tolist()
     json_path = os.path.join(output_dir, 'metrics.json')
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(json_metrics, f, indent=2)
 
-    # 3. Confusion matrix PNG (saved but not shown inline)
+    # 3. Confusion matrix PNG 
     import matplotlib
     import matplotlib.pyplot as plt
-    matplotlib.use('Agg')   # non-interactive backend for saving
+    matplotlib.use('Agg')  
 
     short = [SHORT_NAMES[l] for l in LABEL_ORDER]
     cm_norm = cm.astype(float) / (cm.sum(axis=1, keepdims=True) + 1e-9)

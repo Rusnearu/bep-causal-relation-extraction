@@ -1,5 +1,5 @@
 """
-Data loader for SemEval-2010 Task 8 json files.
+Data loader for C-GCN JSON input files.
 """
 
 import json

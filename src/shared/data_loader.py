@@ -1,30 +1,13 @@
 """
-Shared data loading for the 3-class causal relation extraction project.
-
-Supports two datasets:
-  - SemEval-2010 Task 8 (TRAIN_FILE.TXT / TEST_FILE_FULL.TXT)
-      label_mode='3class'  → maps all 19 SemEval labels to 3 classes:
-                             Cause-Effect(e1,e2), Cause-Effect(e2,e1), Other
-      label_mode='full'    → keeps the original 19-class labels (used only
-                             in the reproduction baseline)
-  - CausalNewsCorpus V1 (*_clean.txt)
-      Labels are already 3-class; no mapping needed.
+Shared data loading for the 3-class causal relation extraction.
 
 """
 
 import re
 
-# ---------------------------------------------------------------------------
-# Constants
-# ---------------------------------------------------------------------------
-
 CAUSAL_LABELS = {'Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)'}
 
-
-# ---------------------------------------------------------------------------
 # Internal helpers
-# ---------------------------------------------------------------------------
-
 def _map_to_3class(label: str) -> str:
     """Maps any SemEval-19-class label to one of the 3 project labels."""
     return label if label in CAUSAL_LABELS else 'Other'
@@ -34,12 +17,7 @@ def _parse_semeval_blocks(filepath: str):
     """
     Parses any SemEval-style file where examples are separated by blank lines.
 
-    Each block has the structure:
-        <ID>  "<sentence with <e1>/<e2> tags>"
-        <label>          (only in training / full-test files)
-        Comment: ...     (only in training / full-test files)
-
-    Returns a list of raw dicts:
+    Returns a list of dicts:
         {'id': int, 'sentence': str, 'e1': str, 'e2': str,
          'label': str or None}
     """
@@ -70,7 +48,7 @@ def _parse_semeval_blocks(filepath: str):
         e1_text = e1_match.group(1) if e1_match else ''
         e2_text = e2_match.group(1) if e2_match else ''
 
-        # Line 1 is the label (present in train + full-test files)
+        # Line 1 is the label
         label = lines[1].strip().replace('\r', '') if len(lines) > 1 else None
 
         examples.append({
@@ -84,19 +62,15 @@ def _parse_semeval_blocks(filepath: str):
     return examples
 
 
-# ---------------------------------------------------------------------------
-
 def load_semeval_train(filepath: str, label_mode: str = '3class'):
     """
     Loads SemEval-2010 Task 8 training file.
 
     Parameters
-    ----------
     filepath    : path to TRAIN_FILE.TXT
     label_mode  : '3class' (default) or 'full' (19-class)
 
     Returns
-    -------
     list of dicts: {id, sentence, e1, e2, label}
     Labels are already mapped according to label_mode.
     """
@@ -110,10 +84,8 @@ def load_semeval_train(filepath: str, label_mode: str = '3class'):
 def load_semeval_test_with_labels(filepath: str, label_mode: str = '3class'):
     """
     Loads the full test file (TEST_FILE_FULL.TXT — includes labels).
-    Use this for evaluation.
 
     Returns
-    -------
     list of dicts: {id, sentence, e1, e2, label}
     """
     examples = _parse_semeval_blocks(filepath)
@@ -126,8 +98,7 @@ def load_semeval_test_with_labels(filepath: str, label_mode: str = '3class'):
 def load_cnc_data(filepath: str):
     """
     Loads CausalNewsCorpus *_clean.txt files.
-    Format per line: row_idx<TAB>sent_id<TAB>"sentence"<TAB>Label.
-    Labels are already 3-class; the trailing period is stripped.
+
     Returns list of dicts: {id, sentence, e1, e2, label}
     """
     examples = []
@@ -159,7 +130,6 @@ def load_cnc_data(filepath: str):
 def get_label_distribution(examples):
     """
     Returns a sorted list of (label, count, pct) tuples for a list of examples.
-    Useful for quick data exploration in notebooks.
     """
     from collections import Counter
     total = len(examples)

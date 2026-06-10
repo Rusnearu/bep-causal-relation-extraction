@@ -1,8 +1,6 @@
 """
 Naive-Bayes-specific data loading.
 
-Parsing is delegated entirely to src/shared/data_loader.py.
-
 """
 
 import re
@@ -45,10 +43,8 @@ def load_train_data(filepath, label_mode='full'):
     Loads training data and returns (feature_strings, labels, examples).
 
     Parameters
-    ----------
     filepath   : path to TRAIN_FILE.TXT
     label_mode : 'full' (default, 19-class) or '3class'
-                 Passed straight through to the shared loader.
     """
     from src.shared.data_loader import load_semeval_train
     from src.naive_bayes.features import extract_local_context
@@ -62,8 +58,6 @@ def load_train_data(filepath, label_mode='full'):
 def _parse_semeval_lines(filepath: str):
     """
     Parses the compact test file where each line is one example
-    (no blank-line separators, no labels):
-        <ID>  "<sentence>"
     """
     examples = []
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -96,8 +90,7 @@ def _parse_semeval_lines(filepath: str):
 
 def load_test_data(filepath):
     """
-    Loads the compact test file (no labels) and returns
-    (feature_strings, examples).
+    Loads the compact test file (no labels) and returns (feature_strings, examples).
     """
     from src.naive_bayes.features import extract_local_context
 

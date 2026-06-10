@@ -1,0 +1,49 @@
+{
+  "model": "cgcn",
+  "dataset": "seed_4",
+  "primary": {
+    "macro_f1_causal_only": 0.8936
+  },
+  "per_class": {
+    "Cause-Effect(e1,e2)": {
+      "precision": 0.9237,
+      "recall": 0.903,
+      "f1": 0.9132,
+      "support": 134
+    },
+    "Cause-Effect(e2,e1)": {
+      "precision": 0.8718,
+      "recall": 0.8763,
+      "f1": 0.874,
+      "support": 194
+    },
+    "Other": {
+      "precision": 0.9849,
+      "recall": 0.9858,
+      "f1": 0.9854,
+      "support": 2389
+    }
+  },
+  "overall": {
+    "macro_f1_all3": 0.9242,
+    "micro_f1": 0.9739,
+    "accuracy": 0.9739
+  },
+  "confusion_matrix": [
+    [
+      121,
+      0,
+      13
+    ],
+    [
+      1,
+      170,
+      23
+    ],
+    [
+      9,
+      25,
+      2355
+    ]
+  ]
+}

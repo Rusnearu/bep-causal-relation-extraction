@@ -1,3 +1,8 @@
+"""
+Evaluation for the 19-class SemEval reproduction (official Perl scorer).
+
+"""
+
 import os
 import subprocess
 from sklearn.metrics import classification_report, f1_score, accuracy_score
@@ -20,8 +25,7 @@ def save_predictions_official_format(ids, predictions, output_filepath):
 
 def run_format_checker(predictions_filepath, checker_script_path):
     """
-    Runs the official Perl format checker on your predictions file.
-    This validates your file before scoring — always run this first!
+    Runs the official Perl format checker on the predictions file.
 
     """
     print("Running official format checker...")
@@ -48,14 +52,8 @@ def run_official_scorer(predictions_filepath, key_filepath, scorer_script_path,
                         results_output_path=None):
     """
     Runs the official Perl scorer and captures all output.
+    Returns: The full text output from the scorer
 
-    This is the ONLY way to get the official macro F1 score that
-    matches what the paper reports.
-
-    Returns
-    -------
-    str
-        The full text output from the scorer
     """
     print("Running official semeval scorer")
 

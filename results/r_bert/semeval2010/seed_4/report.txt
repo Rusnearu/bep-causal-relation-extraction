@@ -1,0 +1,25 @@
+EVALUATION REPORT
+Model:   r_bert
+Dataset: seed_4
+============================================================
+
+PRIMARY METRIC
+  Macro F1 (Cause-Effect only): 0.9267
+
+PER-CLASS RESULTS
+Label                            P       R      F1   Support
+--------------------------------------------------------
+Cause-Effect(e1,e2)         0.9762  0.9179  0.9462       134
+Cause-Effect(e2,e1)         0.9072  0.9072  0.9072       194
+Other                       0.9887  0.9920  0.9904      2389
+
+OVERALL
+  Macro F1 (all 3): 0.9479
+  Micro F1:         0.9823
+  Accuracy:         0.9823
+
+CONFUSION MATRIX (rows=true, cols=pred)
+Labels: ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
+[[ 123    2    9]
+ [   0  176   18]
+ [   3   16 2370]]

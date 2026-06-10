@@ -1,0 +1,49 @@
+{
+  "model": "r_bert",
+  "dataset": "seed_4",
+  "primary": {
+    "macro_f1_causal_only": 0.9267
+  },
+  "per_class": {
+    "Cause-Effect(e1,e2)": {
+      "precision": 0.9762,
+      "recall": 0.9179,
+      "f1": 0.9462,
+      "support": 134
+    },
+    "Cause-Effect(e2,e1)": {
+      "precision": 0.9072,
+      "recall": 0.9072,
+      "f1": 0.9072,
+      "support": 194
+    },
+    "Other": {
+      "precision": 0.9887,
+      "recall": 0.992,
+      "f1": 0.9904,
+      "support": 2389
+    }
+  },
+  "overall": {
+    "macro_f1_all3": 0.9479,
+    "micro_f1": 0.9823,
+    "accuracy": 0.9823
+  },
+  "confusion_matrix": [
+    [
+      123,
+      2,
+      9
+    ],
+    [
+      0,
+      176,
+      18
+    ],
+    [
+      3,
+      16,
+      2370
+    ]
+  ]
+}

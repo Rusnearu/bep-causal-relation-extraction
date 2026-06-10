@@ -1,8 +1,6 @@
 """
-naive_bayes_model.py
-====================
-Standard MultinomialNB with alpha=1.0 (classic Laplace smoothing).
-This is what a 2010-era 'simple Naive Bayes' implementation would use.
+MultinomialNB with alpha=1.0.
+
 """
 
 from sklearn.naive_bayes import MultinomialNB
@@ -14,13 +12,8 @@ def build_naive_bayes_pipeline(vectorizer, alpha=1.0):
     Chains CountVectorizer → MultinomialNB into one sklearn Pipeline.
 
     Parameters
-    ----------
-    vectorizer : CountVectorizer from features.create_vectorizer()
-    alpha : float, Laplace smoothing parameter (1.0 = classic default)
-
-    Returns
-    -------
-    sklearn Pipeline
+    vectorizer : CountVectorizer
+    alpha : Laplace smoothing parameter = 1.0
     """
     return Pipeline([
         ('bow',        vectorizer),

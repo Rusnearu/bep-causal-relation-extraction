@@ -1,0 +1,25 @@
+EVALUATION REPORT
+Model:   cgcn
+Dataset: seed_4
+============================================================
+
+PRIMARY METRIC
+  Macro F1 (Cause-Effect only): 0.8936
+
+PER-CLASS RESULTS
+Label                            P       R      F1   Support
+--------------------------------------------------------
+Cause-Effect(e1,e2)         0.9237  0.9030  0.9132       134
+Cause-Effect(e2,e1)         0.8718  0.8763  0.8740       194
+Other                       0.9849  0.9858  0.9854      2389
+
+OVERALL
+  Macro F1 (all 3): 0.9242
+  Micro F1:         0.9739
+  Accuracy:         0.9739
+
+CONFUSION MATRIX (rows=true, cols=pred)
+Labels: ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
+[[ 121    0   13]
+ [   1  170   23]
+ [   9   25 2355]]

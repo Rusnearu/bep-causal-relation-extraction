@@ -2,7 +2,6 @@
 Train C-GCN for 3-class causal relation extraction.
 
 Supports any dataset whose JSON files were prepared by prepare_data.py.
-Dataset is inferred from --eval_dir (e.g. results/cgcn/semeval2010 → semeval2010).
 """
 
 import os

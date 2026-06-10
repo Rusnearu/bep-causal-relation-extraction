@@ -8,3 +8,4 @@ data/semeval2010/cgcn/vocab/
 data/CausalNewsCorpus/cgcn/vocab/
 data/semeval2010/r-bert/cached_*
 data/CausalNewsCorpus/r-bert/cached_*
+experiments/

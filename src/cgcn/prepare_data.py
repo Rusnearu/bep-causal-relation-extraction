@@ -3,7 +3,7 @@ Converts SemEval-2010 Task 8 or CausalNewsCorpus to the JSON format expected by 
 
 This needs to be run only once locally per dataset.
 
-Usage (from repo root):
+Usage:
     pip install stanza
     python -c "import stanza; stanza.download('en')"
     python src/cgcn/prepare_data.py --dataset semeval
@@ -87,7 +87,7 @@ def get_entity_char_spans(sentence):
     return clean, e1_span, e2_span
 
 def token_span(words, char_start, char_end):
-    """0-based inclusive [tok_start, tok_end] covering [char_start, char_end)."""
+    """Return token indices that cover the given character span."""
     hits = [i for i, w in enumerate(words)
             if w.start_char < char_end and w.end_char > char_start]
     if not hits:
@@ -103,8 +103,6 @@ def entity_ner_type(words, tok_start, tok_end):
              for w in words[tok_start:tok_end + 1]]
     types = [t for t in types if t != 'O']
     return Counter(types).most_common(1)[0][0] if types else 'MISC'
-
-# Conversion
 
 def convert(examples, nlp):
     records, skipped = [], 0
@@ -147,8 +145,6 @@ def convert(examples, nlp):
     if skipped:
         print(f'  Skipped {skipped} examples due to parse errors.')
     return records
-
-# Main
 
 def main():
     parser = argparse.ArgumentParser()

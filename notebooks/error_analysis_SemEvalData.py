@@ -1,13 +1,13 @@
 """
-Error analysis for the 3-class causal relation extraction project.
+Error analysis for the 3-class causal relation extraction on SemEval dataset.
 
 Loads saved predictions from all three models (Naive Bayes, R-BERT, C-GCN)
-and the gold test labels, then produces a structured report covering:
+and the gold test labels, then calcualtes:
 
   1. Error counts
   2. Error overlap across models
   3. Sentences all three models get wrong
-  4. Direction confusion  (right class, wrong direction)
+  4. Direction confusion  
   5. Explicit causal marker analysis
   6. Sentence length analysis
   7. Unique failures — sentences only ONE model gets wrong
@@ -21,14 +21,10 @@ import re
 import sys
 from collections import Counter, defaultdict
 
-# ---------------------------------------------------------------------------
-# Paths
-# ---------------------------------------------------------------------------
-
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 
-from shared.data_loader import load_semeval_test_with_labels  # noqa: E402
+from shared.data_loader import load_semeval_test_with_labels
 
 TEST_FILE   = os.path.join(ROOT, "data", "semeval2010", "raw", "TEST_FILE_FULL.TXT")
 RESULTS_DIR = os.path.join(ROOT, "results")
@@ -38,7 +34,7 @@ CAUSAL   = {"Cause-Effect(e1,e2)", "Cause-Effect(e2,e1)"}
 OPPOSITE = {"Cause-Effect(e1,e2)": "Cause-Effect(e2,e1)",
             "Cause-Effect(e2,e1)": "Cause-Effect(e1,e2)"}
 
-# Causal connective words / phrases to look for in sentences
+# Causal connective words 
 EXPLICIT_MARKERS = [
     "because", "cause", "caused", "causes", "causing",
     "due to", "as a result", "result in", "results in", "resulted in",
@@ -48,10 +44,7 @@ EXPLICIT_MARKERS = [
     "bring about", "give rise to", "stem from", "owing to",
 ]
 
-# ---------------------------------------------------------------------------
 # Load data
-# ---------------------------------------------------------------------------
-
 def load_predictions(model_name: str):
     path = os.path.join(RESULTS_DIR, model_name, "semeval2010", "predictions.txt")
     with open(path, encoding="utf-8") as f:
@@ -66,10 +59,7 @@ cgcn_preds  = load_predictions("cgcn")
 assert len(test_examples) == len(nb_preds) == len(rbert_preds) == len(cgcn_preds), \
     "Prediction file length does not match test set size."
 
-# ---------------------------------------------------------------------------
 # Build combined records
-# ---------------------------------------------------------------------------
-
 def strip_tags(sentence: str) -> str:
     """Remove <e1>, </e1>, <e2>, </e2> tags."""
     return re.sub(r"</?e[12]>", "", sentence)
@@ -82,7 +72,6 @@ for i, ex in enumerate(test_examples):
     rb   = rbert_preds[i]
     cg   = cgcn_preds[i]
 
-    # Direction confusion: predicted the other causal class (right type, wrong direction)
     def dir_confused(pred):
         return true in CAUSAL and pred == OPPOSITE.get(true)
 
@@ -110,14 +99,10 @@ for i, ex in enumerate(test_examples):
         "length":     token_count,
     })
 
-# Filtered list
 causal_records = [r for r in records if r["true"] in CAUSAL]
 other_records  = [r for r in records if r["true"] == "Other"]
 
-# ---------------------------------------------------------------------------
 # Helper
-# ---------------------------------------------------------------------------
-
 SEP  = "=" * 70
 SEP2 = "-" * 70
 
@@ -144,10 +129,7 @@ def show_examples(recs, n=10, show_preds=True):
         print()
 
 
-# ===========================================================================
 # SECTION 1 — Overall error counts
-# ===========================================================================
-
 section("1. OVERALL ERROR COUNTS")
 
 total = len(records)
@@ -155,7 +137,6 @@ for name, key in [("Naive Bayes", "nb_wrong"), ("R-BERT", "rbert_wrong"), ("C-GC
     n_wrong = sum(1 for r in records if r[key])
     print(f"  {name:15s}  errors: {pct(n_wrong, total)}")
 
-# Filters to only sentences with that true label, then counts errors within that group
 print()
 for label in LABELS:
     subset = [r for r in records if r["true"] == label]
@@ -166,10 +147,7 @@ for label in LABELS:
         print(f"    {name:8s}  wrong: {pct(w, n)}")
     print()
 
-# ===========================================================================
 # SECTION 2 — Error overlap
-# ===========================================================================
-
 section("2. ERROR OVERLAP")
 
 combos = {
@@ -182,28 +160,22 @@ combos = {
 
 for label, fn in combos.items():
     n = sum(1 for r in records if fn(r))
-    # Break down by true class
     by_class = Counter(r["true"] for r in records if fn(r))
     class_str = "  ".join(f"{k}:{v}" for k, v in sorted(by_class.items()))
     print(f"  {label:22s}  {pct(n, total):18s}  [{class_str}]")
 
-# ===========================================================================
 # SECTION 3 — Sentences ALL THREE models get wrong
-# ===========================================================================
-
 section("3. SENTENCES ALL THREE MODELS GET WRONG")
 
 all_wrong = [r for r in records if r["all_wrong"]]
 print(f"  Total: {len(all_wrong)} sentences\n")
 
-# Split by true class
 for label in LABELS:
     subset = [r for r in all_wrong if r["true"] == label]
     if not subset:
         continue
     subsection(f"  True label: {label}  ({len(subset)} sentences)")
 
-    # What did models actually predict?
     nb_pred_counts    = Counter(r["nb"]    for r in subset)
     rbert_pred_counts = Counter(r["rbert"] for r in subset)
     cgcn_pred_counts  = Counter(r["cgcn"]  for r in subset)
@@ -211,7 +183,6 @@ for label in LABELS:
     print(f"    R-BERT predicted: {dict(rbert_pred_counts)}")
     print(f"    C-GCN predicted:  {dict(cgcn_pred_counts)}")
 
-    # Marker and length stats
     all_label = [r for r in records if r["true"] == label]
     with_marker = [r for r in subset if r["has_marker"]]
     avg_len_wrong   = sum(r["length"] for r in subset) / len(subset)
@@ -221,10 +192,7 @@ for label in LABELS:
     print()
     show_examples(subset, n=len(subset))
 
-# ===========================================================================
 # SECTION 4 — Direction confusion
-# ===========================================================================
-
 section("4. DIRECTION CONFUSION (right class, wrong direction)")
 
 causal_n = len(causal_records)
@@ -232,7 +200,6 @@ for name, key in [("Naive Bayes", "nb_dir_confused"),
                   ("R-BERT",      "rbert_dir_confused"),
                   ("C-GCN",       "cgcn_dir_confused")]:
     n = sum(1 for r in causal_records if r[key])
-    # As share of that model's causal errors
     total_errors_causal = sum(1 for r in causal_records if r[f"{key.split('_')[0]}_wrong"])
     print(f"  {name:15s}  direction confused: {pct(n, causal_n)} of causal examples", end="")
     if total_errors_causal:
@@ -240,16 +207,13 @@ for name, key in [("Naive Bayes", "nb_dir_confused"),
     else:
         print()
 
-# Sentences where ALL models confuse direction
 all_dir_confused = [r for r in causal_records
                     if r["nb_dir_confused"] and r["rbert_dir_confused"] and r["cgcn_dir_confused"]]
 print(f"\n  All 3 models direction-confused on {len(all_dir_confused)} sentences:")
 show_examples(all_dir_confused, n=10)
 
-# ===========================================================================
-# SECTION 5 — Explicit causal marker analysis
-# ===========================================================================
 
+# SECTION 5 — Explicit causal marker analysis
 section("5. EXPLICIT CAUSAL MARKER ANALYSIS")
 print("  Does having an explicit causal word ('because', 'caused', 'due to', ...) help?\n")
 
@@ -270,25 +234,22 @@ for label in LABELS:
         print(f"      {name:8s} error rate: {pct(w, len(without_m)) if without_m else 'n/a'}")
     print()
 
-# ===========================================================================
 # SECTION 6 — Sentence length analysis
-# ===========================================================================
-
 section("6. SENTENCE LENGTH ANALYSIS")
 
 avg_len_all = sum(r["length"] for r in records) / len(records)
 print(f"  Overall average sentence length: {avg_len_all:.1f} tokens\n")
 
 def bucket(length):
-    if length <= 15:  return "short  (<=15)"
-    if length <= 25:  return "medium (16-25)"
-    return                    "long   (>25)"
+    if length <= 13:  return "short  (<=13)"
+    if length <= 19:  return "medium (14-19)"
+    return                    "long   (>19)"
 
 buckets = defaultdict(list)
 for r in records:
     buckets[bucket(r["length"])].append(r)
 
-for bname in ["short  (<=15)", "medium (16-25)", "long   (>25)"]:
+for bname in ["short  (<=13)", "medium (14-19)", "long   (>19)"]:
     subset = buckets[bname]
     if not subset:
         continue
@@ -298,10 +259,7 @@ for bname in ["short  (<=15)", "medium (16-25)", "long   (>25)"]:
         print(f"    {name:8s} error rate: {pct(w, len(subset))}")
     print()
 
-# ===========================================================================
 # SECTION 7 — Unique failures: only one model is wrong
-# ===========================================================================
-
 section("7. UNIQUE FAILURES — sentences only ONE model gets wrong")
 
 for name, wrong_key, other_keys in [
@@ -312,5 +270,6 @@ for name, wrong_key, other_keys in [
     unique = [r for r in records if r[wrong_key] and not any(r[k] for k in other_keys)]
     causal_unique = [r for r in unique if r["true"] in CAUSAL]
     print(f"\n  {name} uniquely wrong: {len(unique)} total, {len(causal_unique)} on causal classes")
+
 
 print(f"\n{SEP}\nDone.\n")

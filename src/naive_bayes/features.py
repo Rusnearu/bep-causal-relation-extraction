@@ -1,12 +1,6 @@
 """
-features.py
-===========
 Feature extraction: position-labeled 2-word context window around each entity.
 
-For each entity, the words to the left are labeled e1_l:word, the entity
-word(s) are labeled e1:word, and the words to the right are labeled e1_r:word.
-Same for e2. All left-context words share the same position label regardless
-of distance, so position is coarsely encoded in the bag-of-words.
 """
 
 import re
@@ -16,10 +10,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 def extract_local_context(raw_sentence, window=2):
     """
     Extract position-labeled context window features around each entity.
-
-    Returns a string of space-separated tokens like:
-        'e1_l:arrayed e1_l:antenna e1:configuration e1_r:of e1_r:antenna
-         e2_l:antenna e2_l:elements e2:elements e2_r:.'
+    Returns a string of tokens seperated by space.
     """
     token_pattern = re.compile(r'(<e1>|</e1>|<e2>|</e2>|[^\s<>]+)')
     raw_tokens = token_pattern.findall(raw_sentence)
