@@ -4,22 +4,22 @@ Dataset: semeval2010
 ============================================================
 
 PRIMARY METRIC
-  Macro F1 (Cause-Effect only): 0.9096
+  Macro F1 (Cause-Effect only): 0.9078
 
 PER-CLASS RESULTS
 Label                            P       R      F1   Support
 --------------------------------------------------------
-Cause-Effect(e1,e2)         0.9669  0.8731  0.9176       134
-Cause-Effect(e2,e1)         0.9062  0.8969  0.9016       194
-Other                       0.9859  0.9920  0.9889      2389
+Cause-Effect(e1,e2)         0.9179  0.9179  0.9179       134
+Cause-Effect(e2,e1)         0.8696  0.9278  0.8978       194
+Other                       0.9912  0.9858  0.9885      2389
 
 OVERALL
-  Macro F1 (all 3): 0.9360
-  Micro F1:         0.9794
-  Accuracy:         0.9794
+  Macro F1 (all 3): 0.9347
+  Micro F1:         0.9783
+  Accuracy:         0.9783
 
 CONFUSION MATRIX (rows=true, cols=pred)
 Labels: ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
-[[ 117    3   14]
- [   0  174   20]
- [   4   15 2370]]
+[[ 123    3    8]
+ [   1  180   13]
+ [  10   24 2355]]

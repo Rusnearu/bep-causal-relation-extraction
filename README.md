@@ -20,20 +20,20 @@ Three models (Naive Bayes, R-BERT, C-GCN) evaluated on two datasets (SemEval-201
 The original experiments were run natively on Windows (NVIDIA RTX 1000, CUDA 12.4). Docker, even on Windows, runs inside a Linux environment via WSL2. PyTorch uses cuDNN internally for GPU operations, and cuDNN behaves differently between native Windows and Linux. This means that even with identical random seeds, results produced inside Docker may differ from the pre-computed results stored in `results/`.
 
 - **To verify the code runs**: use Docker.
-- **To reproduce the exact reported results**: follow the Local setup below.
+- **To reproduce the reported results**: re-run locally on the same hardware (Windows, NVIDIA RTX 1000 Ada, CUDA 12.4).
 - **To inspect results without re-running**: all results are pre-computed in `results/`.
 
-Naive Bayes is not affected — it runs on CPU and is fully reproducible across platforms.
+Naive Bayes is not affected, it runs on CPU and is fully reproducible across platforms.
 
 ---
 
 ## Pre-computed results
 
 All results are already included in `results/`. Each model/dataset folder contains:
-- `metrics.json` — macro F1, per-class precision/recall/F1
-- `report.txt` — human readable report
-- `predictions.txt` — predicted labels for the test set
-- `confusion_matrix.png` — confusion matrix plot
+- `metrics.json`: macro F1, per-class precision/recall/F1
+- `report.txt`: human readable report
+- `predictions.txt`: predicted labels for the test set
+- `confusion_matrix.png`: confusion matrix plot
 
 R-BERT and C-GCN models were run with 5 seeds. The top-level folder contains the initial run (seed 77 for R-BERT, seed 1234 for C-GCN) and `seed_1/` through `seed_4/` contain the remaining runs. Thus, no need to retrain the models to inspect the results.
 

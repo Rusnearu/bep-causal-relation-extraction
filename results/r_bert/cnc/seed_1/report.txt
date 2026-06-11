@@ -4,22 +4,22 @@ Dataset: seed_1
 ============================================================
 
 PRIMARY METRIC
-  Macro F1 (Cause-Effect only): 0.8833
+  Macro F1 (Cause-Effect only): 0.8505
 
 PER-CLASS RESULTS
 Label                            P       R      F1   Support
 --------------------------------------------------------
-Cause-Effect(e1,e2)         0.6977  0.9091  0.7895        33
-Cause-Effect(e2,e1)         0.9739  0.9803  0.9770       152
-Other                       0.9565  0.6471  0.7719        34
+Cause-Effect(e1,e2)         0.6750  0.8182  0.7397        33
+Cause-Effect(e2,e1)         0.9430  0.9803  0.9613       152
+Other                       1.0000  0.6176  0.7636        34
 
 OVERALL
-  Macro F1 (all 3): 0.8462
-  Micro F1:         0.9178
-  Accuracy:         0.9178
+  Macro F1 (all 3): 0.8216
+  Micro F1:         0.8995
+  Accuracy:         0.8995
 
 CONFUSION MATRIX (rows=true, cols=pred)
 Labels: ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
-[[ 30   3   0]
- [  2 149   1]
- [ 11   1  22]]
+[[ 27   6   0]
+ [  3 149   0]
+ [ 10   3  21]]

@@ -2,32 +2,32 @@
   "model": "r_bert",
   "dataset": "seed_4",
   "primary": {
-    "macro_f1_causal_only": 0.8685
+    "macro_f1_causal_only": 0.859
   },
   "per_class": {
     "Cause-Effect(e1,e2)": {
-      "precision": 0.8065,
+      "precision": 0.7812,
       "recall": 0.7576,
-      "f1": 0.7812,
+      "f1": 0.7692,
       "support": 33
     },
     "Cause-Effect(e2,e1)": {
-      "precision": 0.9207,
-      "recall": 0.9934,
-      "f1": 0.9557,
+      "precision": 0.925,
+      "recall": 0.9737,
+      "f1": 0.9487,
       "support": 152
     },
     "Other": {
-      "precision": 0.9583,
-      "recall": 0.6765,
-      "f1": 0.7931,
+      "precision": 0.9259,
+      "recall": 0.7353,
+      "f1": 0.8197,
       "support": 34
     }
   },
   "overall": {
-    "macro_f1_all3": 0.8433,
-    "micro_f1": 0.9087,
-    "accuracy": 0.9087
+    "macro_f1_all3": 0.8459,
+    "micro_f1": 0.9041,
+    "accuracy": 0.9041
   },
   "confusion_matrix": [
     [
@@ -36,14 +36,14 @@
       1
     ],
     [
-      1,
-      151,
-      0
+      3,
+      148,
+      1
     ],
     [
+      4,
       5,
-      6,
-      23
+      25
     ]
   ]
 }
