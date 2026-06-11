@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 *.pyo
+.ipynb_checkpoints/
 venv/
 data/glove/
 saved_models/

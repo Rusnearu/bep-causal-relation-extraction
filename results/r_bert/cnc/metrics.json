@@ -2,19 +2,19 @@
   "model": "r_bert",
   "dataset": "cnc",
   "primary": {
-    "macro_f1_causal_only": 0.8485
+    "macro_f1_causal_only": 0.8344
   },
   "per_class": {
     "Cause-Effect(e1,e2)": {
-      "precision": 0.7143,
-      "recall": 0.7576,
-      "f1": 0.7353,
+      "precision": 0.7059,
+      "recall": 0.7273,
+      "f1": 0.7164,
       "support": 33
     },
     "Cause-Effect(e2,e1)": {
-      "precision": 0.9321,
-      "recall": 0.9934,
-      "f1": 0.9618,
+      "precision": 0.9202,
+      "recall": 0.9868,
+      "f1": 0.9524,
       "support": 152
     },
     "Other": {
@@ -25,24 +25,24 @@
     }
   },
   "overall": {
-    "macro_f1_all3": 0.8276,
-    "micro_f1": 0.9041,
-    "accuracy": 0.9041
+    "macro_f1_all3": 0.8182,
+    "micro_f1": 0.895,
+    "accuracy": 0.895
   },
   "confusion_matrix": [
     [
-      25,
-      8,
-      0
-    ],
-    [
-      1,
-      151,
-      0
-    ],
-    [
+      24,
       9,
-      3,
+      0
+    ],
+    [
+      2,
+      150,
+      0
+    ],
+    [
+      8,
+      4,
       22
     ]
   ]

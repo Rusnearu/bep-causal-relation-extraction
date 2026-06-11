@@ -4,22 +4,22 @@ Dataset: cnc
 ============================================================
 
 PRIMARY METRIC
-  Macro F1 (Cause-Effect only): 0.8485
+  Macro F1 (Cause-Effect only): 0.8344
 
 PER-CLASS RESULTS
 Label                            P       R      F1   Support
 --------------------------------------------------------
-Cause-Effect(e1,e2)         0.7143  0.7576  0.7353        33
-Cause-Effect(e2,e1)         0.9321  0.9934  0.9618       152
+Cause-Effect(e1,e2)         0.7059  0.7273  0.7164        33
+Cause-Effect(e2,e1)         0.9202  0.9868  0.9524       152
 Other                       1.0000  0.6471  0.7857        34
 
 OVERALL
-  Macro F1 (all 3): 0.8276
-  Micro F1:         0.9041
-  Accuracy:         0.9041
+  Macro F1 (all 3): 0.8182
+  Micro F1:         0.8950
+  Accuracy:         0.8950
 
 CONFUSION MATRIX (rows=true, cols=pred)
 Labels: ['Cause-Effect(e1,e2)', 'Cause-Effect(e2,e1)', 'Other']
-[[ 25   8   0]
- [  1 151   0]
- [  9   3  22]]
+[[ 24   9   0]
+ [  2 150   0]
+ [  8   4  22]]
